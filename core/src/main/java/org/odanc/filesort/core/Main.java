@@ -8,11 +8,10 @@ public class Main {
     
     public static void main(String... args) {
         
-        // Checking just for sure, all args should be already checked at this point
+        // All args should be already checked at this point.
         // This class is meant to be run from filesort-runner jar
         if (args.length != 2) {
-            System.err.println("Wrong number of arguments");
-            System.exit(-1);
+            terminate("wrong number of arguments");
         }
         
         Path sourceFile = Paths.get(args[0]);
@@ -35,7 +34,7 @@ public class Main {
             
         // Checking just for sure, shouldn't happen if is run from filesort-runner jar    
         } catch (NoSuchFileException nsfe) {
-            terminate("File " + sourceFile.toString() + " doesn't exist");
+            terminate("file " + sourceFile.toString() + " doesn't exist");
             
         // All exceptions of file sorting routine are printed to output stream.
         // Application execution is then aborted since there is nothing else to do.
@@ -45,26 +44,13 @@ public class Main {
     }
     
     private static void terminate(String errorMessage) {
-        terminate(errorMessage, null);
+        System.err.println("Error: " + errorMessage);
+        System.exit(-1);
     }
     
     private static void terminate(Throwable e) {
-        terminate(null, e);
-    }
-    
-    // Print errors and terminate application execution
-    private static void terminate(String errorMessage, Throwable e) {
-        System.err.println("Error encountered");
-        
-        if (errorMessage != null) {
-            System.err.println(errorMessage);
-        }
-        
-        if (e != null) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        }
-        
+        System.err.println("Error: " + e.getMessage());
+        e.printStackTrace();
         System.exit(-1);
     }
     
