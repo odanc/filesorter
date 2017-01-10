@@ -13,7 +13,7 @@ import java.nio.file.Paths;
  * 
  */
 public class Main {
-    private static String CORE_MODULE_FILE_NAME = "filesort-core.jar";
+    private static String CORE_MODULE_FILE_NAME = "filesorter-core.jar";
     
     public static void main(String... args) {
         
