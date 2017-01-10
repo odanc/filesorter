@@ -10,5 +10,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>filesort-runner</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.odanc.filesort.runner.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     
 </project>
