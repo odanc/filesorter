@@ -17,10 +17,12 @@ import static org.junit.Assert.assertEquals;
 
 public class FileSorterTest {
     private static Path outputFile;
+    private static boolean isWindows;
 
     @BeforeClass
     public static void setUp() {
-        outputFile = Paths.get(FileSorterTest.class.getResource("/").getFile() + "generated.txt");
+        isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
+        outputFile = getPathTo("generated.txt");
     }
 
     @Test
@@ -66,8 +68,11 @@ public class FileSorterTest {
     }
 
     @After
-    public void tearDown() throws Exception {
-        Files.deleteIfExists(outputFile);
+    public void tearDown() {
+        // On Windows Files.delete throws AccessDeniedException
+        // Files.delete(outputFile);
+
+        outputFile.toFile().delete();
     }
     
     private void sortFile(Path sourceFile, Path outputFile) throws IOException {
@@ -77,8 +82,10 @@ public class FileSorterTest {
         new FileSorter(config).sort();
     }
 
-    private Path getPathTo(String fileName) {
-        return Paths.get(getClass().getResource("/" + fileName).getFile());
+    // Gets OS-dependent path to file
+    private static Path getPathTo(String fileName) {
+        String fullFileName = FileSorterTest.class.getResource("/").getFile() + fileName;
+        return isWindows ? Paths.get(fullFileName.substring(1)) : Paths.get(fullFileName);
     }
     
     // Maps content of the file to memory-mapped buffer of the given size

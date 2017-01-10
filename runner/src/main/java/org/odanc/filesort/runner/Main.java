@@ -17,7 +17,7 @@ public class Main {
     
     public static void main(String... args) {
         
-        // Check that filesort-core module is located in current working directory
+        // Check that filesorter-core module is located in current working directory
         // since there is no point to proceed further if it's not
         if (Files.notExists(Paths.get(CORE_MODULE_FILE_NAME))) {
             terminate("couldn't locate " + CORE_MODULE_FILE_NAME + " in the current directory");

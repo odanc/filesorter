@@ -31,10 +31,10 @@ java -jar filesorter-runner.jar /usr/share/man/sometext 2g
 ### Test data generation
 
 The following one-liners can be used to generate *~5mb* text file with name *unsorted.txt* filled with 
-whitespaces and random words of length no more than *100* characters each:
-- **Windows using PowerShell console 4 or higher**
+whitespaces and random strings of length no more than *100* characters each:
+- **Windows using PowerShell 4 or higher**
 ```
-(1..(5mb / 128)).ForEach({-join ([char[]]([char]'A'..[char]'Z' + [char]'a'..[char]'z' + 9,10,13,32) * 100 | Get-Random -Count 100) | Add-Content unsorted.txt})
+(1..(5mb / 100)).ForEach({-join ([char[]]([char]'A'..[char]'Z' + [char]'a'..[char]'z' + 9,10,13,32) * 100 | Get-Random -Count 100) | Add-Content unsorted.txt})
 ```
 - **Unix**
 ```
@@ -67,5 +67,5 @@ however it depends on desired performance. For quicker sorting it is good practi
 
 -
 
-<!-- On Macbook with 4Gb 1600MHz DDR3 RAM, 1.8GHz Core i5 CPU and SSD runned under macOS Sierra 
-to sort without exceptions 10Gb text file FileSorter required no less than -->
+On macbook with 4Gb 1600MHz DDR3 RAM, 1.8GHz Core i5 CPU and SSD run under macOS Sierra 
+FileSorter required at least *105Mb* heap size to sort *10Gb* text file with no out of memory errors.

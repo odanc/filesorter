@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 
 /**
  * Configuration with all required setting for sorting files.
- * It stores settings like path to the sourceFile file, path to 
+ * It stores settings like path to the source file, path to 
  * save sorted output file, words count to load from the source
  * file at once and the delimiter used to separate words in
  * the source file.

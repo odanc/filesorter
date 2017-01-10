@@ -9,7 +9,7 @@ public class Main {
     public static void main(String... args) {
         
         // All args should be already checked at this point.
-        // This class is meant to be run from filesort-runner jar
+        // This class is meant to be run from filesorter-runner.jar
         if (args.length != 2) {
             terminate("wrong number of arguments");
         }
