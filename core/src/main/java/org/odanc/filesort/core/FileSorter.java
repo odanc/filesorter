@@ -6,12 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Scanner;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.WRITE;
@@ -95,11 +93,9 @@ class FileSorter {
     // Merges contents of the files from list and outputs them to single file
     private void mergeFiles(List<Path> files, Path outputFile) throws IOException {
         
-        // The buffer for holding words from temporary files
-        Queue<WordWrapper> sortedWords = new PriorityQueue<>(files.size());
-        
-        // Maps the words in queue to their corresponding files
-        Map<WordWrapper, Scanner> wordToFileMap = new HashMap<>(files.size());
+        // Words buffer with mappings to files the words came from.
+        // Words are stored in sorted order.
+        SortedMap<WordWrapper, Scanner> wordToFileMap = new TreeMap<>();
         
         if (Files.notExists(outputFile)) {
             Files.createFile(outputFile);
@@ -107,15 +103,13 @@ class FileSorter {
 
         try (BufferedWriter writer = Files.newBufferedWriter(outputFile, UTF_8, WRITE)) {
             
-            // Reads the first word from each temporary file,
-            // maps it to the file it was read from and
-            // stores words in the buffer in sorted order.
+            // Reads the first word from each temporary file, maps it
+            // to the file it was read from and stores it in the buffer.
             for (Path file : files) {
                 Scanner scanner = new Scanner(file, UTF_8.name());
                 if (scanner.hasNext()) {
                     WordWrapper wrapper = new WordWrapper(scanner.next());
                     wordToFileMap.put(wrapper, scanner);
-                    sortedWords.add(wrapper);
                 }
 
                 checkForReadErrors(scanner);
@@ -126,15 +120,14 @@ class FileSorter {
             // the written word was from, repeates.
             // The loop continues until all temporary files are entirely read.
             while (!wordToFileMap.isEmpty()) {
-                WordWrapper wrapper = sortedWords.poll();
+                WordWrapper wrapper = wordToFileMap.firstKey();
+                Scanner scanner = wordToFileMap.remove(wrapper);
                 writer.write(wrapper.getWord());
                 writer.newLine();
-
-                Scanner scanner = wordToFileMap.remove(wrapper);
+                
                 if (scanner.hasNext()) {
                     wrapper = new WordWrapper(scanner.next());
                     wordToFileMap.put(wrapper, scanner);
-                    sortedWords.add(wrapper);
                 } else {
                     scanner.close();
                 }
