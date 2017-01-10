@@ -25,9 +25,10 @@ class Config {
     // Default maximum single word size used to calculate words buffer size
     private static final int DEFAULT_MAX_WORD_SIZE = 100;
     
-    // Minimum number of words to load from file at once, sort them
-    // and store in a temporary file
+    // Minimum and maximum number of words to load from file at once,
+    // sort them and store in a temporary file
     static final int MIN_BUFFER_SIZE = 200_000;
+    static final int MAX_BUFFER_SIZE = 1_000_000;
     
     // Heap size in bytes not meant to be available for words buffer
     // It doesn't really mean that it won't be available for this
@@ -125,25 +126,26 @@ class Config {
             
             if (maxHeapSize > 0) {
 
-                // approximate minimum memory usage in bytes for one word of MAX_WORD_SIZE length
+                // Approximate minimum memory usage in bytes for one word of MAX_WORD_SIZE length
                 // based on http://stackoverflow.com/a/31207050
                 int wordSize = 8 * (((maxWordSize * 2) + 45) / 8) - 8;
 
-                // sets the appropriate words buffer size based on heap size,
-                // single word size and reserved heap size
+                // Sets the appropriate words buffer size based on heap size,
+                // single word size and reserved heap size. Ensures that heap size
+                // value is between MIN_BUFFER_SIZE and MAX_BUFFER_SIZE
                 int bufferSize = (maxHeapSize * 1024 * 1024 - RESERVED_HEAP_SIZE) / wordSize;
-                config.bufferSize = Math.max(bufferSize, MIN_BUFFER_SIZE);
+                config.bufferSize = Math.min(Math.max(bufferSize, MIN_BUFFER_SIZE), MAX_BUFFER_SIZE);
 
             } else {
                 config.bufferSize = MIN_BUFFER_SIZE;
             }
             
-            // do not permit negative single word size
+            // Do not permit negative single word size
             config.maxWordSize = maxWordSize > 0
                     ? maxWordSize
                     : DEFAULT_MAX_WORD_SIZE;
             
-            // if the output file is not set use the current working directory
+            // If the output file is not set use the current working directory
             config.outputFile = outputFile != null
                     ? outputFile
                     : DEFAULT_OUTPUT_FILE;

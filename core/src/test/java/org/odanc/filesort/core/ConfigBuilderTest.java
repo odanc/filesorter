@@ -8,10 +8,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.odanc.filesort.core.Config.DEFAULT_OUTPUT_FILE;
+import static org.odanc.filesort.core.Config.MAX_BUFFER_SIZE;
 import static org.odanc.filesort.core.Config.MIN_BUFFER_SIZE;
 
 public class ConfigBuilderTest {
@@ -30,31 +30,31 @@ public class ConfigBuilderTest {
         ConfigBuilder builder = Config.newBuilder(sourceFile, 0);
         
         Config config = builder.build();
-        assertBufferSizesEqual(config);
+        assertMinBufferSize(config);
         assertEquals("source files paths are not equal", sourceFile, config.getSourceFile());
         assertNull("word delimiter is set", config.getDelimiter());
         assertEquals("output files paths are not equal", DEFAULT_OUTPUT_FILE, config.getOutputFile());
         
         builder = Config.newBuilder(sourceFile, -1);
-        assertBufferSizesEqual(builder.build());
+        assertMinBufferSize(builder.build());
         
         builder = Config.newBuilder(sourceFile, 1_024);
-        assertBufferSizesNotEqual(builder.build());
+        assertMaxBufferSize(builder.build());
     }
     
     @Test
     public void test_custom_word_size_config_builder() {
         ConfigBuilder builder = Config.newBuilder(sourceFile, 0);
-        assertBufferSizesEqual(builder.build());
-        assertBufferSizesEqual(builder.setMaxWordSize(-1).build());
-        assertBufferSizesEqual(builder.setMaxWordSize(0).build());
-        assertBufferSizesEqual(builder.setMaxWordSize(1_000).build());
+        assertMinBufferSize(builder.build());
+        assertMinBufferSize(builder.setMaxWordSize(-1).build());
+        assertMinBufferSize(builder.setMaxWordSize(0).build());
+        assertMinBufferSize(builder.setMaxWordSize(1_000).build());
         
-        builder = Config.newBuilder(sourceFile, 1_024);
-        assertBufferSizesNotEqual(builder.build());
-        assertBufferSizesNotEqual(builder.setMaxWordSize(-1).build());
-        assertBufferSizesNotEqual(builder.setMaxWordSize(0).build());
-        assertBufferSizesNotEqual(builder.setMaxWordSize(1_000).build());
+        builder = Config.newBuilder(sourceFile, 2_048);
+        assertMaxBufferSize(builder.build());
+        assertMaxBufferSize(builder.setMaxWordSize(-1).build());
+        assertMaxBufferSize(builder.setMaxWordSize(0).build());
+        assertMaxBufferSize(builder.setMaxWordSize(1_000).build());
     }
     
     @Test
@@ -68,12 +68,12 @@ public class ConfigBuilderTest {
         assertNotNull("delimiter is not set", config.getDelimiter());
     }
     
-    private void assertBufferSizesEqual(Config config) {
+    private void assertMinBufferSize(Config config) {
         assertEquals("buffer sizes are not equal", MIN_BUFFER_SIZE, config.getBufferSize());
     }
     
-    private void assertBufferSizesNotEqual(Config config) {
-        assertNotEquals("buffer sizes are equal", MIN_BUFFER_SIZE, config.getBufferSize());
+    private void assertMaxBufferSize(Config config) {
+        assertEquals("buffer sizes are not equal", MAX_BUFFER_SIZE, config.getBufferSize());
     }
 
 }
