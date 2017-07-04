@@ -53,8 +53,8 @@ class FileSorter {
     private void splitFile(Path sourceFile) throws IOException {
         
         // Sets the maximum words for one temporary file
-        int bufferSize = config.getBufferSize();
-        List<String> words = new ArrayList<>(bufferSize);
+        int wordsPerFile = config.getBufferSize();
+        List<String> words = new ArrayList<>(wordsPerFile);
 
         try (Scanner scanner = new Scanner(sourceFile, UTF_8.name())) {
             String delimiter = config.getDelimiter();
@@ -72,7 +72,7 @@ class FileSorter {
                 words.add(scanner.next());
                 currentSize += 1;
 
-                if (currentSize == bufferSize) {
+                if (currentSize == wordsPerFile) {
                     currentSize = 0;
                     processWords(words);
                     words.clear();
@@ -97,7 +97,7 @@ class FileSorter {
         // Words are stored in sorted order.
         SortedMap<WordWrapper, Scanner> wordToFileMap = new TreeMap<>();
         
-        if (Files.notExists(outputFile)) {
+        if (!outputFile.toFile().exists()) {
             Files.createFile(outputFile);
         }
 
@@ -193,6 +193,17 @@ class FileSorter {
         @Override
         public int compareTo(WordWrapper other) {
             return word.compareTo(other.getWord());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null || obj.getClass() != WordWrapper.class) {
+                return false;
+            } else {
+                WordWrapper other = (WordWrapper) obj;
+                String word = other.getWord();
+                return word != null && word.equals(this.getWord());
+            }
         }
     }
 }
