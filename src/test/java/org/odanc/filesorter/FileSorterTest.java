@@ -1,4 +1,4 @@
-package org.odanc.filesort.core;
+package org.odanc.filesorter;
 
 import org.junit.After;
 import org.junit.BeforeClass;

@@ -1,4 +1,4 @@
-package org.odanc.filesort.core;
+package org.odanc.filesorter;
 
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;

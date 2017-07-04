@@ -1,8 +1,8 @@
-package org.odanc.filesort.core;
+package org.odanc.filesorter;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.odanc.filesort.core.Config.ConfigBuilder;
+import org.odanc.filesorter.Config.ConfigBuilder;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,9 +10,9 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.odanc.filesort.core.Config.DEFAULT_OUTPUT_FILE;
-import static org.odanc.filesort.core.Config.MAX_BUFFER_SIZE;
-import static org.odanc.filesort.core.Config.MIN_BUFFER_SIZE;
+import static org.odanc.filesorter.Config.DEFAULT_OUTPUT_FILE;
+import static org.odanc.filesorter.Config.MAX_BUFFER_SIZE;
+import static org.odanc.filesorter.Config.MIN_BUFFER_SIZE;
 
 public class ConfigBuilderTest {
     private static Path sourceFile;

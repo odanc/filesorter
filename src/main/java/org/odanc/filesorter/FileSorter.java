@@ -1,4 +1,4 @@
-package org.odanc.filesort.core;
+package org.odanc.filesorter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

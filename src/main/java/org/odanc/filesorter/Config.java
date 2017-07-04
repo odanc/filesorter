@@ -1,4 +1,4 @@
-package org.odanc.filesort.core;
+package org.odanc.filesorter;
 
 import java.io.File;
 import java.nio.file.Path;
