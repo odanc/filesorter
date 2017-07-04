@@ -205,5 +205,10 @@ class FileSorter {
                 return word != null && word.equals(this.getWord());
             }
         }
+
+        @Override
+        public int hashCode() {
+            return word.hashCode();
+        }
     }
 }
