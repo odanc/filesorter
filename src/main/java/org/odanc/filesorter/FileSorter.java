@@ -10,15 +10,17 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.WRITE;
 
 class FileSorter {
     private Config config;
-    
+
     // Used for storing all the temporary file names
     private List<Path> tempFiles;
+    private long wordCounter;
 
     /**
      * File Sorter which sorts file from the given configuration
@@ -181,9 +183,11 @@ class FileSorter {
      */
     private class WordWrapper implements Comparable<WordWrapper> {
         private String word;
+        private final long id;
 
         WordWrapper(String wrappedString) {
             this.word = wrappedString;
+            this.id = wordCounter++;
         }
 
         String getWord() {
@@ -192,23 +196,25 @@ class FileSorter {
 
         @Override
         public int compareTo(WordWrapper other) {
-            return word.compareTo(other.getWord());
+            int result = word.compareTo(other.getWord());
+            return result != 0 ? result : Long.compare(id, other.id);
         }
 
         @Override
         public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
             if (obj == null || obj.getClass() != WordWrapper.class) {
                 return false;
-            } else {
-                WordWrapper other = (WordWrapper) obj;
-                String word = other.getWord();
-                return word != null && word.equals(this.getWord());
             }
+            WordWrapper other = (WordWrapper) obj;
+            return id == other.id && Objects.equals(word, other.word);
         }
 
         @Override
         public int hashCode() {
-            return word.hashCode();
+            return Objects.hash(word, id);
         }
     }
 }
